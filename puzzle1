@@ -1,0 +1,12 @@
+import I2C_LCD_driver
+from time import*
+
+if __name__ == "__main__":
+    mylcd = I2C_LCD_driver.lcd()
+
+    mylcd.lcd_display_string("Que quieres imprimir?", 1)
+    txt = input("Que quieres imprimir?")
+    mylcd.lcd_clear()
+    mylcd.lcd_display_string(txt,3)
+    sleep(3)
+    mylcd.lcd_clear()
