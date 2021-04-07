@@ -1,0 +1,85 @@
+import threading
+import I2C_LCD_driver
+import gi
+gi.require_version('Gtk', '3.0');
+from gi.repository import Gio, GLib, Gtk, Gdk, GObject
+
+class LCD_Gtk(Gtk.Window):
+    def __init__(self):
+        #Inicializamos la ventana y le ponemos titulo
+        Gtk.Window.__init__(self, title="Text View LCD")
+        #Ajustem el tamany predeterminat de la finestra
+        self.set_default_size(305, 120)
+
+        #Creamos y añadimos un Grid donde pondremos los diferentes elementos
+        self.grid = Gtk.Grid()
+        self.add(self.grid)
+
+        self.create_textview()
+        self.create_button()
+        
+        #Diseño de la ventana
+        css_provider = Gtk.CssProvider()
+            #Hemos de poner donde encontramos el archivo css
+            #en mi caso esta en la misma carpeta que este
+        css_provider.load_from_path("diseño.css")
+        context = Gtk.StyleContext()
+        screen = Gdk.Screen.get_default()
+        context.add_provider_for_screen(screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        
+    #Funcion que crea el campo de texto donde escribiremos
+    def create_textview(self):
+        self.textview = Gtk.TextView()
+        #Añadimos un wrap, para que al llegar al final de la linea,
+        #salte y no se expanda la ventana
+        self.wrap = Gtk.WrapMode(1)
+        self.textview.set_wrap_mode(self.wrap)
+
+        #Pongo el tamaño que es necesario para que podamos escribir
+        #20 caracteres por linea en 4 lineas
+        self.textview.set_size_request(229,96)
+        
+        self.textview.set_monospace(True)
+        
+        #Añado el TextView a la primera posicion del Grid
+        self.textbuffer = self.textview.get_buffer()
+        self.grid.attach(self.textview, 3, 0, 3, 1)
+
+    #Funcion que crea el button
+    def create_button(self):
+        #Creamos el boton con una etiqueta i le añadimos la funcion que ha de realizar
+        self.button = Gtk.Button.new_with_label("Display")
+        self.button.connect("clicked", self.clicked_on_me)
+
+        #Añadimos el boton al Grid despues del TextView
+        self.grid.attach(self.button, 0, 1, 9, 1)
+
+    #Funcion que se ejecuta al darle al boton
+    def clicked_on_me(self, button):
+        myLCD.lcd_clear();
+        row = 1
+        col = 0
+        end = False
+        txt = self.textbuffer.get_text(self.textbuffer.get_start_iter(),self.textbuffer.get_end_iter(), False)
+        for letra in txt:
+            if letra != chr(10):
+                myLCD.lcd_display_string_pos(letra, row, col)
+                col = col + 1
+                if col == 20:
+                    col = 0
+                    row = row + 1
+                    end = True
+            elif end == False:
+                col = 0
+                row = row + 1
+            else:
+                end = False
+        #Elimino el texto de la ventana
+        self.textbuffer.delete(self.textbuffer.get_start_iter(), self.textbuffer.get_end_iter())
+        
+if __name__ == "__main__":
+    myLCD = I2C_LCD_driver.lcd()
+    win = LCD_Gtk()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
