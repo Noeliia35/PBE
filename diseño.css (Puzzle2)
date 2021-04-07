@@ -1,31 +1,31 @@
-	window{
+window{
         background-color: #A0DCE3;
         font-style: oblique; 
         font-size: 40px;
-    }
-    grid{
-        background-color: #F2DBDF;
-    }
-    button{ 
-	    color: black;
-		background-color: #00CAFF;
-		border-top-color: rgb(128,57,0);
-		border-left-color: rgba(10%,20%,30%,0.5);
-		border-right-color: #ff00cc;
+}
+grid{
+	background-color: #F2DBDF;
+}
+button{
+	color: black;
+	background-color: #00CAFF;
+	border-top-color: rgb(128,57,0);
+	border-left-color: rgba(10%,20%,30%,0.5);
+	border-right-color: #ff00cc;
         border-color: #E5E5E5;
         border-width: 10px;
         border-style: dotted;
         font-style: italic;
         font-size: 20px; 
-	}
-	button:hover {
-		background-color: #FFC0CB;
-	}
-	button:active {
-		background-color: #FFFF00;
-	}
-	textview{
-		background: #1E90FF;
+}
+button:hover {
+	background-color: #FFC0CB;
+}
+button:active {
+	background-color: #FFFF00;
+}
+textview{
+	background: #1E90FF;
         font-style: italic;
         font-size: 18px;    
-	}
+}
